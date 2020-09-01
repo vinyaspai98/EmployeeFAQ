@@ -110,12 +110,12 @@ class AskQuestion extends Component {
 }
 
   handleAskQuestion=()=> {
-    const newQuestion={
-      "title":this.state.title,
-      "question":this.state.question
-    }
+    const formData =new FormData();
+     formData.append('image',this.state.image,this.state.image.name)
+     formData.append('title',this.state.title)
+     formData.append('question',this.state.question)
     axios
-    .post('/askquestion', newQuestion)
+    .post('/askquestion', formData)
     .then((res) => {
       console.log(res)
       this.setState(
