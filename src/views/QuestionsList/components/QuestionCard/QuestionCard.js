@@ -23,8 +23,6 @@ import PropTypes from 'prop-types';
 const useStyles = makeStyles((theme) => ({
   root: {},
   imageContainer: {
-    height: 64,
-    width: 64,
     margin: '0 auto',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: '5px',
@@ -33,8 +31,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  image: {
-    width: '100%'
+  media: {
+    height: "500px",
+    width:"500px",
+    paddingTop: '50.25%', // 16:9
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -59,6 +61,7 @@ const QuestionCard = props => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  console.log(question)
 
   return (
     <Card className={classes.root}>
@@ -69,15 +72,18 @@ const QuestionCard = props => {
           </Avatar>
         }
         
-        title="Shrimp and Chorizo Paella"
+        title={question.userName}
         subheader={moment(question.postedAt).fromNow()}
       />
       <CardMedia
         className={classes.media}
-        image={question.imageURL}
+        image={question.imageUrl}
         title="image"
       />
       <CardContent>
+      <Typography variant="h4" gutterBottom color="primary" component="h2">
+          {question.title}
+        </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
           {question.question}
         </Typography>

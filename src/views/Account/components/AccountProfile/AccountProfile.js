@@ -139,13 +139,13 @@ class AccountProfile extends Component {
             src={this.state.userData.imageUrl}
           />
         </div>
-        <div className={classes.progress}>
+        {/* <div className={classes.progress}>
           <Typography variant="body1">Profile Completeness: 70%</Typography>
           <LinearProgress
             value={70}
             variant="determinate"
           />
-        </div>
+        </div> */}
       </CardContent>
       <Divider />
       <CardActions>

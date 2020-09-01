@@ -1,8 +1,6 @@
-import React, { useState, useEffect,Component } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 
 import {
@@ -15,8 +13,6 @@ import {
   Checkbox,
   Typography
 } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-//import { render } from 'node-sass';
 
 const useStyles = theme => ({
   root: {
@@ -94,12 +90,10 @@ class AskQuestion extends Component {
   constructor() {
     super();
     this.state = {
-      email: '',
-      password: '',
-      confirmPassword: '',
-      userName: '',
-      loading:false,
-      errors: {}
+      title:'',
+      question:'',
+      image:null,
+      statusText:null,
     };
   }
 
@@ -108,147 +102,99 @@ class AskQuestion extends Component {
       [event.target.name]: event.target.value
     });
   };
-
-  handleBack = () => {
-    this.props.history.goBack();
-  };
-
-  setAuthorizationHeader = (token) => {
-    const FBIdToken = `Bearer ${token}`;
-    localStorage.setItem('FBIdToken', FBIdToken);
-    axios.defaults.headers.common['Authorization'] = FBIdToken;
-  };
-  handleSignUp = event => {
+  onChangeFile=(event)=> {
+    event.stopPropagation();
     event.preventDefault();
-    this.setState({
-      loading: true
-    });
-    const newUserData = {
-      email: this.state.email,
-      password: this.state.password,
-      confirmPassword: this.state.confirmPassword,
-      userName: this.state.userName
-    };
+    this.state.image=event.target.files[0];
+    console.log(this.state.image)
+}
+
+  handleAskQuestion=()=> {
+    const newQuestion={
+      "title":this.state.title,
+      "question":this.state.question
+    }
     axios
-    .post('/signup', newUserData)
+    .post('/askquestion', newQuestion)
     .then((res) => {
-      //this.setAuthorizationHeader(res.data.token);
+      console.log(res)
       this.setState(
         {
-          loading:false
+          statusText:"Question Posted Successfully"
         }
       )
-      this.props.history.push('/sign-in');
+      this.props.history.push('/questions');
     })
     .catch((err) => {
       console.log(err.response);
       this.setState(
         {
-          errors:err.response.data,
-          loading:false
+          statusText:"Error while posting question"
         }
-      )
+        )
     });
-  };
+    console.log(this.state.statusText)
+  }
+
   render(){
-  const {
-    classes,
-    history,
-  } = this.props;
-  const { errors } = this.state;
+  const { classes,history } = this.props;
   return (
     <Grid container className={classes.form}>
-        <Grid item sm />
         <Grid item sm>
-          <img src='/images/logos/icon.png' alt="Logo" className={classes.logoImage} />
-          <Typography variant="h2" className={classes.pageTitle}>
-            SignUp
+          <Typography variant="h2" className={classes.title}>
+            Ask Question
           </Typography>
-            <form noValidate onSubmit={this.handleSignUp}>
+            <form noValidate>
           <TextField
-              id="email"
-              name="email"
-              type="email"
-              label="Email"
-              className={classes.textField}
-              helperText={errors.email}
-              error={errors.email ? true : false}
-              value={this.state.email}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="userName"
-              name="userName"
+              name="title"
               type="text"
-              label="User Name"
+              label="Title"
               className={classes.textField}
-              helperText={errors.userName}
-              error={errors.userName ? true : false}
-              value={this.state.userName}
+              value={this.state.title}
               onChange={this.handleChange}
               fullWidth
+              required
+              variant="outlined"
             />
             <TextField
-              id="password"
-              name="password"
-              type="password"
-              label="Password"
+              name="question"
+              type="text"
+              label="body"
+              multiline
+              rows={6}
               className={classes.textField}
-              helperText={errors.password}
-              error={errors.password ? true : false}
-              value={this.state.password}
+              value={this.state.question}
               onChange={this.handleChange}
               fullWidth
+              required
+              variant="outlined"
             />
             <TextField
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              label="Confirm Password"
+              name="image"
+              type="file"
+              required
               className={classes.textField}
-              helperText={errors.confirmPassword}
-              error={errors.confirmPassword ? true : false}
-              value={this.state.confirmPassword}
-              onChange={this.handleChange}
+              value={this.state.body}
+              onChange={this.onChangeFile}
               fullWidth
+              variant="outlined"
             />
-            
-            {errors.general && (
-              <Typography variant="body2" className={classes.customError}>
-                {errors.general}
-              </Typography>
-            )}
             <Button
-              type="submit"
               variant="contained"
               color="primary"
               className={classes.signUpButton}
-              disabled={this.state.loading}
+              onClick={this.handleAskQuestion}
             >
-              SignUp
-              {this.state.loading && (
-                <CircularProgress size={30} className={classes.progress} />
-              )}
+              Post Question
             </Button>
-            <br />
-            <Typography
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  Already have an account ?{' '}
-                  <Link
-                    component={RouterLink}
-                    to="/sign-in"
-                    variant="h6"
-                  >
-                    Login
-                  </Link>
+              {this.state.statusText && (
+                <Typography variant="body2" className={classes.customError}>
+                  {this.state.statusText}
                 </Typography>
-
+              )}
+            <br />
           </form>
           </Grid>
-          <Grid item sm />
           </Grid>
   );
   }

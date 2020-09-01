@@ -27,7 +27,7 @@ const Topbar = props => {
         <RouterLink to="/">
           <img
             alt="Logo"
-            src="/images/logos/icon.png" width="50px" height="50px"
+            src="/images/logos/icon.png" width="160px" height="50px"
           />
         </RouterLink>
       </Toolbar>

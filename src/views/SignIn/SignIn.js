@@ -125,7 +125,7 @@ class SignUp extends Component {
       email: this.state.email,
       password: this.state.password
     };
-    axios
+     axios
     .post('/login', newUserData)
     .then((res) => {
       this.setAuthorizationHeader(res.data.token);
@@ -156,8 +156,8 @@ class SignUp extends Component {
     <Grid container className={classes.form}>
         <Grid item sm />
         <Grid item sm>
-          <img src='/images/logos/icon.png' alt="Logo" className={classes.logoImage} />
-          <Typography variant="h2" className={classes.pageTitle}>
+          <img src='/images/logos/icon-black.png' alt="Logo" className={classes.logoImage} />
+          <Typography variant="h2" className={classes.title}>
             Login
           </Typography>
             <form noValidate onSubmit={this.handleSignIn}>

@@ -1,11 +1,12 @@
-import React from 'react';
+import React,{Component} from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { Avatar, Typography } from '@material-ui/core';
+import axios from 'axios';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -19,23 +20,37 @@ const useStyles = makeStyles(theme => ({
   name: {
     marginTop: theme.spacing(1)
   }
-}));
+});
 
-const Profile = props => {
-  const { className, ...rest } = props;
+class Profile extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userData: []
+    };
+  } 
+  componentDidMount() {
+    axios
+    .get(`/user`)
+    .then((res) => {
+      this.setState({
+        userData: res.data
+      });
+    })
+    .catch((err) => console.log(err));
+  }
+  render(){
 
-  const classes = useStyles();
-
+  const { classes} = this.props;
   const user = {
-    name: 'Shen Zhi',
-    avatar: '/images/avatars/avatar_11.png',
-    bio: 'Brain Director'
+    name: this.state.userData.fullName ? this.state.userData.fullName : this.state.userData.userName,
+    avatar: this.state.userData.imageUrl,
+    location: this.state.userData.location ? this.state.userData.location : ""
   };
 
   return (
     <div
-      {...rest}
-      className={clsx(classes.root, className)}
+      className={clsx(classes.root, classes)}
     >
       <Avatar
         alt="Person"
@@ -50,13 +65,13 @@ const Profile = props => {
       >
         {user.name}
       </Typography>
-      <Typography variant="body2">{user.bio}</Typography>
+      <Typography variant="body2">{user.location}</Typography>
     </div>
   );
-};
+}};
 
 Profile.propTypes = {
   className: PropTypes.string
 };
 
-export default Profile;
+export default withStyles(useStyles)(Profile);
