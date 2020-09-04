@@ -84,7 +84,7 @@ const QuestionCard = props => {
       <Typography variant="h4" gutterBottom color="primary" component="h2">
           {question.title}
         </Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography variant="h6" component="p">
           {question.question}
         </Typography>
       </CardContent>

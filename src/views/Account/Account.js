@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
+import questionCard from '../QuestionsList/components/QuestionCard'
 
 import { AccountProfile, AccountDetails } from './components';
 
@@ -38,6 +39,7 @@ const Account = () => {
           <AccountDetails />
         </Grid>
       </Grid>
+      <questionCard />
     </div>
   );
 };

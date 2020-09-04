@@ -1,11 +1,21 @@
 
 ## Quick start
 
+- Open teminal 1
+
 - Install dependencies: `npm install` or `yarn`
 
-- Start the server: `npm run start` or `yarn start`
+- Start the front end server: `npm start` or `yarn start`
 
 - Views are on: `localhost:3000`
+
+- Open terminal 2
+
+- Cd server
+
+- Install dependencies: `npm install` or `yarn`
+
+- Start the Back end server: `node index.js`
 
 ## File Structure
 
@@ -24,6 +34,17 @@ material-react-dashboard
 ├── README.md
 ├── public
 ├── docs
+└── server
+	├── handlers
+		└── questions.js
+		└── users.js
+	├── utils
+		└── config.js
+		└── admin.js
+		└── fbAuth.js
+		└── validator.js
+	├── key
+	├── index.js
 └── src
 	├── assets
 	├── common
@@ -34,10 +55,11 @@ material-react-dashboard
 	├── theme
 	├── views
 	│	├── Account
+		├── AskQuestion
 	│	├── Dashboard
 	│	├── Icons
 	│	├── NotFound
-	│	├── ProductList
+	│	├── Questions
 	│	├── Settings
 	│	├── SignIn
 	│	├── SignUp
