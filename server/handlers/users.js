@@ -11,6 +11,18 @@ const {
   reduceUserDetails,
 } = require("../utils/validator");
 
+//Get Logged user
+exports.getUserName=(req,res)=>{
+  if(req.user)
+  {
+    console.log("User Name is ",req.user.userName)
+    return res.json({userName:req.user.userName})
+  }
+  else
+  {
+    return res.json({error:"error"})
+  }
+}
 
 //sign up
 exports.signup=(req,res)=>{

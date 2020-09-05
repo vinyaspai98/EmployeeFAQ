@@ -16,15 +16,19 @@ import ShareIcon from '@material-ui/icons/Share';
 import CommentIcon from '@material-ui/icons/Comment';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@material-ui/core/Menu';  
+import Grid from '@material-ui/core/Grid';  
+import MenuItem from '@material-ui/core/MenuItem'; 
 import moment from 'moment'
 import PropTypes from 'prop-types';
-import CommentsCard from '../CommentsCard'
+import CommentsCard from '../CommentsCard';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   imageContainer: {
     margin: '0 auto',
-    border: `1px solid ${theme.palette.divider}`,
+    border: `5px solid ${theme.palette.divider}`,
     borderRadius: '5px',
     overflow: 'hidden',
     display: 'flex',
@@ -54,14 +58,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const QuestionCard = props => { 
-    const { className, question, ...rest } = props;
+    const { className, question,settingsButton, ...rest } = props;
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-
+  var statusText=null;
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  console.log(question)
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const deleteQuestion = async() => {
+    await axios.delete(`/question/${question.questionId}`)
+      .then((res)=>{
+          console.log(res);
+          statusText="Post deleted Successfully..Reload the page !!"
+      })
+      .catch((err)=>{
+            statusText="Error while deleting post"
+      })
+      setAnchorEl(null);
+      window.location.reload(false);
+  };
 
   return (
     <Card className={classes.root}>
@@ -71,7 +96,21 @@ const QuestionCard = props => {
             {question.userName[0].toUpperCase()}
           </Avatar>
         }
-        
+        action={settingsButton && 
+          (<Grid><IconButton aria-label="settings"> 
+            <MoreVertIcon aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}/>
+              <Menu 
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              >
+                <MenuItem onClick={deleteQuestion}>Delete</MenuItem>
+              </Menu>
+          </IconButton>
+              </Grid>
+          )
+        }
         title={question.userName}
         subheader={moment(question.postedAt).fromNow()}
       />
@@ -91,7 +130,7 @@ const QuestionCard = props => {
       <CardActions>
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
-        </IconButton>
+        </IconButton>{question.likeCount}
         <IconButton className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
           })}
@@ -99,20 +138,26 @@ const QuestionCard = props => {
           aria-expanded={expanded}
           aria-label="show more">
           <CommentIcon />
-        </IconButton>
+        </IconButton>{question.commentCount}
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <CommentsCard questionId={question.questionId} />
         </CardContent>
       </Collapse>
+      {statusText && (
+                <Typography variant="body2" className={classes.customError}>
+                  {this.state.statusText}
+                </Typography>
+              )}
     </Card>
   );
 }
 
 QuestionCard.propTypes = {
     className: PropTypes.string,
-    question: PropTypes.object.isRequired
+    question: PropTypes.object.isRequired,
+    settingsButton: PropTypes.bool
   };
   
 export default QuestionCard;

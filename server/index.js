@@ -22,7 +22,8 @@ const {
     uploadImage,
     getAuthenticatedUser,
     updateProfile,
-    removeImage
+    removeImage,
+    getUserName
   } = require('./handlers/users');
 
 const{
@@ -42,6 +43,7 @@ app.get('/user', fbAuth, getAuthenticatedUser);
 app.post('/user/updateProfile',fbAuth,updateProfile)
 app.post('/user/image',fbAuth,multer.single('image'),uploadImage);
 app.get('/user/removeImage',fbAuth,removeImage)
+app.get('/getusername',fbAuth,getUserName)
 
 app.get('/questions',getQuestions);
 app.post('/askquestion',fbAuth,multer.single('image'),askQuestion);

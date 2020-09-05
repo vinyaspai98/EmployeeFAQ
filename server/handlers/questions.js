@@ -21,7 +21,7 @@ exports.getQuestions=(req,res)=>{
             postedAt: doc.data().postedAt,
             commentCount: doc.data().commentCount,
             likeCount: doc.data().likeCount,
-            imageUrl:doc.data().imageUrl
+            imageUrl:doc.data().imageUrl,
           });
         });
         return res.json(questions);

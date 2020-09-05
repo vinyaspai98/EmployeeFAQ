@@ -51,7 +51,7 @@ class QuestionList extends Component {
               key={que.questionId}
               xs={12}
             >
-              <QuestionCard question={que} />
+              <QuestionCard question={que} settingsButton={false}/>
             </Grid>
           ))}
         </Grid>
