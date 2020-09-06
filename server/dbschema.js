@@ -29,7 +29,7 @@ let db = {
       questionId: 'kdjsfgdksuufhgkdsufky',
       body: 'nice one mate!',
       postedAt: '2019-03-15T10:59:52.798Z'
-    }
+    } 
   ],
   notifications: [
     {
@@ -37,7 +37,6 @@ let db = {
       sender: 'john',
       read: 'true | false',
       questionId: 'kdjsfgdksuufhgkdsufky',
-      type: 'like | comment',
       postedAt: '2019-03-15T10:59:52.798Z'
     }
   ]

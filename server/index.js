@@ -34,6 +34,11 @@ const{
     commentOnQuestion
 }= require('./handlers/questions');
 
+const {
+  createNotificationOnComment,
+  getNotifications
+}=require('./handlers/notifications')
+
 
 const fbAuth = require('./utils/fbAuth')
 
@@ -50,6 +55,9 @@ app.post('/askquestion',fbAuth,multer.single('image'),askQuestion);
 app.get('/question/:questionId',fbAuth,fetchQuestion);
 app.delete('/question/:questionId', fbAuth, deleteQuestion);
 app.post('/question/:questionId/comment', fbAuth, commentOnQuestion);
+
+app.get('/comment/notification/:questionId',fbAuth,createNotificationOnComment);
+app.get('/notifications/user',fbAuth,getNotifications);
 
 //start server
 app.listen(5000,()=>{

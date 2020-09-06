@@ -149,6 +149,16 @@ class CommentsCard extends Component {
         )
     });
     console.log(this.state.statusText)
+
+    //Creating comment notification
+    axios
+    .get(`/comment/notification/${this.props.questionId}`)
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err.response);
+    });
   }
 
   render(){
