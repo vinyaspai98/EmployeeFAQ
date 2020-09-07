@@ -243,3 +243,6 @@ exports.updateProfile=(req,res)=>{
   });
 
 }
+
+
+//log out

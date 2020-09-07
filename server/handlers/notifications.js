@@ -54,7 +54,9 @@ exports.getNotifications=(req,res)=>{
     .get()
     .then((snapshot)=>{
         snapshot.forEach((doc) => {
-            notifications.push(doc.data());})
+            var notification=doc.data();
+            notification.notificationId=doc.id;
+            notifications.push(notification)})
         console.log(notifications)
         res.json(notifications)
     })
@@ -62,4 +64,24 @@ exports.getNotifications=(req,res)=>{
         console.log(err)
         res.status(500).json({error:"Something went wrong"})
     })
+}
+
+//Mark notifications as read
+exports.markNotificationRead = (req,res)=>{
+  console.log("Mark notifications read ",req.params.notificationId)
+  db.doc(`/notifications/${req.params.notificationId}`)
+  .get()
+  .then((doc) => {
+    if (!doc.exists) {
+      return res.status(404).json({ error: 'Notification not found' });
+    }
+    return doc.ref.update({ read: true});
+  })
+  .then(() => {
+    return res.status(200).json({message:"Notification marked read"})
+  })
+  .catch((err)=>{
+    console.log(err)
+    return res.status(500).json({error:"Something went wrong"})
+  })
 }

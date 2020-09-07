@@ -23,7 +23,7 @@ const {
     getAuthenticatedUser,
     updateProfile,
     removeImage,
-    getUserName
+    getUserName,
   } = require('./handlers/users');
 
 const{
@@ -36,7 +36,8 @@ const{
 
 const {
   createNotificationOnComment,
-  getNotifications
+  getNotifications,
+  markNotificationRead
 }=require('./handlers/notifications')
 
 
@@ -58,6 +59,7 @@ app.post('/question/:questionId/comment', fbAuth, commentOnQuestion);
 
 app.get('/comment/notification/:questionId',fbAuth,createNotificationOnComment);
 app.get('/notifications/user',fbAuth,getNotifications);
+app.get('/notification/read/:notificationId',fbAuth,markNotificationRead)
 
 //start server
 app.listen(5000,()=>{

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { AppBar, Toolbar, Badge, Hidden, IconButton, Typography, Card, Grid } from '@material-ui/core';
+import { AppBar, Toolbar, Badge, Hidden, IconButton, Typography, Card, Grid, MenuList, MenuItem } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
@@ -12,6 +12,8 @@ import Collapse from '@material-ui/core/Collapse';
 import CardContent from '@material-ui/core/CardContent';
 import axios from 'axios';
 import moment from 'moment';
+import { withRouter } from 'react-router-dom'
+
 
 const useStyles = theme => ({
   root: {
@@ -24,7 +26,7 @@ const useStyles = theme => ({
     marginLeft: theme.spacing(1)
   },
   customizeToolbar: {
-    maxHeight: '5px'
+    //maxHeight: '5px'
   }
 });
 
@@ -33,7 +35,8 @@ class Topbar  extends Component{
     super();
     this.state = {
       expanded:false,
-      notifications:[]
+      notifications:[],
+      anchorEl:null,
     };
   }
   componentDidMount=()=>{
@@ -53,6 +56,24 @@ class Topbar  extends Component{
       expanded:!this.state.expanded
     })
   };
+  handleClose=()=>{
+    this.state.anchorEl=null;
+  }
+  markNotificationsRead=(notificationId)=>{
+    axios.get(`/notification/read/${notificationId}`)
+    .then((res)=>{
+      console.log(res)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+    this.state.anchorEl=null;
+  }
+
+  handleLogOut = ()=>{
+    localStorage.removeItem('FBIdToken')
+    this.props.history.push('/sign-in')
+  }
   render(){
   const { classes, onSidebarOpen, ...rest } = this.props;
 
@@ -84,22 +105,31 @@ class Topbar  extends Component{
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <Collapse in={this.state.expanded} timeout="auto" unmountOnExit collapsedHeight='15px'>
+          <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+            <Card>
         <CardContent>
-          <Card className={classes.root} variant="outlined">
+          <MenuList anchorEl={this.state.anchorEl}
+              open={Boolean(this.state.anchorEl)}
+              onClose={this.handleClose}
+              >
             {this.state.notifications.map(data => (
-              <Grid key={data.postedAt}>
-            <CardContent>
-            <Typography>{data.sender} commented on your question {moment(data.postedAt).fromNow()}</Typography>
-            </CardContent>
+              <Grid key={data.notificationId}>
+            <MenuItem onClick={this.markNotificationsRead(data.notificationId)}>
+            <Typography color="white">{data.sender} commented on your question {moment(data.postedAt).fromNow()}</Typography>
+            </MenuItem>
             </Grid>
             ))}
-          </Card>
+            {this.state.notifications.length===0 && (<MenuItem>
+            <Typography color="white">You have no notifications yet!!</Typography>
+            </MenuItem>)}
+          </MenuList>
         </CardContent>
+        </Card>
       </Collapse>
           <IconButton
             className={classes.signOutButton}
             color="inherit"
+            onClick={this.handleLogOut}
           >
             <InputIcon />
           </IconButton>
@@ -122,4 +152,4 @@ Topbar.propTypes = {
   onSidebarOpen: PropTypes.func
 };
 
-export default withStyles(useStyles)(Topbar);
+export default withRouter(withStyles(useStyles)(Topbar));
