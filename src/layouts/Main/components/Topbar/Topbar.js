@@ -119,9 +119,11 @@ class Topbar  extends Component{
             </MenuItem>
             </Grid>
             ))}
-            {this.state.notifications.length===0 && (<MenuItem>
+            {this.state.notifications.length===0 && 
+            (<MenuItem>
             <Typography color="white">You have no notifications yet!!</Typography>
-            </MenuItem>)}
+            </MenuItem>)
+            }
           </MenuList>
         </CardContent>
         </Card>
